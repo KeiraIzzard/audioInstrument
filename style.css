@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+/*saving our custom variables*/
+/*light mode*/
+:root {
+    --colour-01: black;
+    --colour-02: white;
+    --colour-03: darkgray;
+    --colour-04: lightgray;
+    --border: 0.5rem inset var(--colour-03);
+}
+
+/*dark mode*/
+@media (prefers-color-scheme: dark) {
+    :root {
+        --colour-01: #f0f6f0;
+        --colour-02: black;
+        --colour-03: lightgray;
+        --colour-04: darkgray;
+    }
+}
+
+body {
+    font-family: "Work Sans", sans-serif;
+    background-color: var(--colour-02);
+    color: var(--colour-01);
+}
+
+dialog[open] {
+    background-color: var(--colour-02);
+    color: var(--colour-01);
+    border: var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    border: var(--border);
+}
