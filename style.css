@@ -38,3 +38,19 @@ dialog[open] {
 button {
     border: var(--border);
 }
+
+.whiteKey {
+    cursor: pointer;
+}
+.whiteKey:hover {
+    background-color: coral;
+}
+.whiteKey:active {
+    background-color: red;
+}
+
+img {
+    /*need this to make layer event info work*/
+    position: relative;
+    margin: 1rem;
+}
