@@ -46,12 +46,19 @@ function endNote(e){
 }
 
 function growTiles(count) {
-  for (let i = 0; i < count; i++) {
-    const x = 150 + Math.random() * 300;
-    const y = 150 + Math.random() * 300;
-    createTile(x, y);
+    const anchorX = 480;      // shifted toward one side instead of centre
+    const anchorY = 150;
+    const spread = 220;
+  
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 1.2 - 0.6; // biased spread, not full circle
+      const distance = 40 + Math.random() * spread;
+      const x = anchorX + Math.cos(angle) * distance;
+      const y = anchorY + Math.sin(angle) * distance;
+      createTile(x, y);
+    }
   }
-}
+  
+  growTiles(6);
 
-growTiles(5);
 // ---- end growth tiles ----
