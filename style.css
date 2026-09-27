@@ -40,7 +40,7 @@ border: var(--border);
 cursor: pointer;
 }
 .whiteKey:hover {
-background-color: coral;
+background-color: coral(241, 155, 115);
 }
 .whiteKey:active {
 background-color: red;
