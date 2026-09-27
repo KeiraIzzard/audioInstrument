@@ -46,12 +46,16 @@ function endNote(e){
 }
 
 function growTiles(count) {
+  const centreX = 300;
+  const trunkTopY = 100;
+  const trunkBottomY = 400;
+
   for (let i = 0; i < count; i++) {
-    const x = 150 + Math.random() * 300;
-    const y = 150 + Math.random() * 300;
+    const y = trunkTopY + (i / count) * (trunkBottomY - trunkTopY);
+    const x = centreX + (Math.random() * 100 - 50);
     createTile(x, y);
   }
 }
 
-growTiles(5);
+growTiles(6);
 // ---- end growth tiles ----
