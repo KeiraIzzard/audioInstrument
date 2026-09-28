@@ -39,6 +39,26 @@ button {
 border: var(--border);
 }
 
+/* centre the page heading and prototype label */
+header {
+text-align: center;
+}
+
+header {
+text-align: center;
+}
+
+header h1,
+header p {
+max-width: none;
+}
+
+/* reset.css caps these at 80rch, which stops them centring across the full page */
+header h1,
+header p {
+max-width: none;
+}
+
 /* branch canvas shares the same top-left origin as the tiles */
 #branch-canvas {
 position: absolute;
@@ -51,16 +71,19 @@ pointer-events: none; /* so the canvas never blocks tile hovering */
 /* tiles are centred on their x/y so branch lines end in the middle */
 .growth-tile {
 position: absolute;
-width: 40px;
-height: 40px;
+width: 44px;
+height: 44px;
 transform: translate(-50%, -50%);
+border: none;
 border-radius: 50%;
-border: var(--border);
-background-color: var(--colour-04);
+background-color: rgba(120, 120, 120, 0.45); /* neutral at rest, so layout is the only variable */
 cursor: pointer;
 z-index: 1;
+transition: background-color 0.3s ease;
 }
+
+/* hover/focus: translucent blue overlay so the branch line shows through */
 .growth-tile:hover,
 .growth-tile:focus {
-background-color: coral;
+background-color: rgba(60, 120, 255, 0.55);
 }
