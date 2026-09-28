@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
+/*saving our custom variables*/
+/*light mode*/
 :root {
     --colour-01: black;
     --colour-02: white;
@@ -8,6 +10,7 @@
     --border: 0.5rem inset var(--colour-03);
 }
 
+/*dark mode*/
 @media (prefers-color-scheme: dark) {
 :root {
         --colour-01: #f0f6f0;
@@ -36,31 +39,31 @@ button {
 border: var(--border);
 }
 
-.whiteKey {
-cursor: pointer;
-}
-.whiteKey:hover {
-background-color: coral;
-}
-.whiteKey:active {
-background-color: red;
-}
-
-img {
-position: relative;
-margin: 1rem;
+/* branch canvas shares the same top-left origin as the tiles */
+#branch-canvas {
+position: absolute;
+top: 0;
+left: 0;
+z-index: 0;
+pointer-events: none; /* so the canvas never blocks tile hovering */
 }
 
+/* tiles are centred on their x/y so branch lines end in the middle */
 .growth-tile {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: var(--border);
-  background-color: var(--colour-04);
-  cursor: pointer;
+position: absolute;
+width: 40px;
+height: 40px;
+transform: translate(-50%, -50%);
+border-radius: 50%;
+border: var(--border);
+background-color: var(--colour-04);
+cursor: pointer;
+z-index: 1;
+transition: background-color 0.3s ease;
 }
+
+/* hover/focus: translucent blue overlay so the branch shows through */
 .growth-tile:hover,
 .growth-tile:focus {
-  background-color: coral;
+background-color: rgba(60, 120, 255, 0.55);
 }
