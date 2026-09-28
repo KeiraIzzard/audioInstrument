@@ -35,6 +35,17 @@ flex-direction: column;
 align-items: center;
 }
 
+/* centre the page heading and prototype label over the tree */
+header {
+  text-align: center;
+  }
+  
+  /* reset.css caps these at 80rch, which stops them centring across the full page */
+  header h1,
+  header p {
+  max-width: none;
+  }
+
 button {
 border: var(--border);
 }
@@ -49,21 +60,26 @@ pointer-events: none; /* so the canvas never blocks tile hovering */
 }
 
 /* tiles are centred on their x/y so branch lines end in the middle */
+/* outline, size, --c1, --c2 and --angle are set per tile in main.js */
 .growth-tile {
 position: absolute;
-width: 40px;
-height: 40px;
 transform: translate(-50%, -50%);
-border-radius: 50%;
-border: var(--border);
-background-color: var(--colour-04);
+border: none; /* no border, so the clipped shard stays clean */
+background: linear-gradient(var(--angle, 135deg), var(--c1, #3a5ba0), var(--c2, #6b4fa0));
+opacity: 0.55; /* see-through at rest so the branch line shows */
 cursor: pointer;
 z-index: 1;
-transition: background-color 0.3s ease;
+transition: opacity 0.3s ease;
+animation: grow-in 1.5s ease; /* each tile fades in when it is created */
 }
 
-/* hover/focus: translucent blue overlay so the branch shows through */
+@keyframes grow-in {
+from { opacity: 0; }
+to { opacity: 0.55; }
+}
+
+/* hover/focus: stronger colour */
 .growth-tile:hover,
 .growth-tile:focus {
-background-color: rgba(60, 120, 255, 0.55);
+opacity: 0.95;
 }
