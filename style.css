@@ -59,7 +59,7 @@ z-index: 0;
 pointer-events: none; /* so the canvas never blocks tile hovering */
 }
 
-/* tiles are centred on their x/y so branch lines end in the middle */
+/* tiles are centred on the x/y axis so branch lines end in the middle */
 .growth-tile {
 position: absolute;
 width: 44px;
@@ -67,7 +67,7 @@ height: 44px;
 transform: translate(-50%, -50%);
 border: none;
 border-radius: 50%;
-background-color: rgba(120, 120, 120, 0.45); /* neutral at rest, so layout is the only variable */
+background-color: rgba(120, 120, 120, 0.45); /* neutral at rest so layout is the only variable */
 cursor: pointer;
 z-index: 1;
 transition: background-color 0.3s ease;

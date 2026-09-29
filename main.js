@@ -6,14 +6,14 @@ const introModal = document.getElementById("intro-modal");
 // find modal close button
 const introModalCloseButton = document.getElementById("intro-modal-close");
 
-////// Modal
+// Modal
 introModal.showModal();
 introModalCloseButton.addEventListener("click", function closeIntroModal(){
     introModal.close();
 });
 introModal.addEventListener("close", toneInit);
 
-////// Tone
+// Tone
 const synth = new Tone.PolySynth();
 
 function toneInit(){
@@ -38,9 +38,9 @@ function drawBranch(fromX, fromY, toX, toY) {
   ctx.lineWidth = 2;
   ctx.stroke();
 }
-// ---- end branch drawing ----
+// end branch drawing
 
-// ---- growth tiles ----
+// growth tiles
 const notes = ['C4', 'D4', 'E4', 'G4', 'A4'];
 
 function createTile(x, y) {
