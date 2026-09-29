@@ -39,6 +39,15 @@ button {
 border: var(--border);
 }
 
+header {
+  text-align: center;
+  }
+  
+  header h1,
+  header p {
+  max-width: none;
+  }
+
 
 #branch-canvas {
 position: absolute;
