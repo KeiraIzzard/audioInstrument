@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dynamic Soundtracker</title>
 
 <link rel="stylesheet" href="reset.css">
@@ -21,13 +19,22 @@
 
 <header>
 <h1>Dynamic Soundtracker</h1>
+<p class="subtitle">A browser-based audio instrument for extended focus sessions</p>
 </header>
 
-<canvas id="branch-canvas"></canvas>
+<canvas id="branch-canvas" aria-hidden="true"></canvas>
 
 <main>
 <!-- tiles are added here by createTile() in main.js -->
 </main>
+
+<div class="controls">
+<button id="pause-button" aria-pressed="false">Pause sound</button>
+</div>
+
+<footer>
+
+</footer>
 
 </body>
 </html>
