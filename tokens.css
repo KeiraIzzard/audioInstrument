@@ -1,0 +1,155 @@
+/* ==========================================================================
+   tokens.css — design tokens shared by every page (instrument + docs)
+   --------------------------------------------------------------------------
+   Colour is strictly green + purple. Every text/background pairing below was
+   checked against WCAG 2.2: body text >= 7:1 (AAA), non-text UI >= 3:1.
+   Dark is the default; light applies when the visitor's system prefers it OR
+   they pick it with the theme button (which sets data-theme on <html>).
+   ========================================================================== */
+
+@font-face { font-family: "Kedebideri"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/kedebideri-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Kedebideri"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/kedebideri-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Kedebideri"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/kedebideri-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Great Vibes"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/great-vibes-latin-400-normal.woff2") format("woff2"); }
+/* fonts are bundled with the site (SIL Open Font License, see fonts/), so the
+   page looks the same offline and never sends a request to a third party */
+
+:root {
+  color-scheme: dark;
+
+  /* palette (raw colours, taken from the mood board) */
+  --aubergine: #1a0b20;
+  --plum: #2d1233;
+  --lavender: #c5b5fe;
+  --lime: #cdf05a;
+  --forest: #022521;
+  --tea-green: #c4d0b0;
+  --bone: #f6f1e7;
+  --pink: #f6a9cf;
+
+  /* surfaces */
+  --bg-0: #17101f;                      /* aubergine (page base) */
+  --bg-1: #231832;                      /* plum (gradient end) */
+  --bg-glow: rgba(170, 155, 215, 0.14); /* soft lavender light from above */
+  --bg-glow-2: rgba(70, 105, 80, 0.26);  /* forest green light from below-left */
+  --panel: rgba(32, 21, 45, 0.92);
+  --panel-border: rgba(179, 166, 214, 0.38);
+
+  /* text */
+  --ink: #efeaf3;                       /* bone */
+  --ink-dim: #cfc6d8;
+  --accent: #b7cba3;                    /* fresh lime: timer, highlights */
+  --accent-2: #b3a6d6;                  /* soft lavender */
+  --link: #b7cba3;
+
+  /* controls */
+  --btn-bg: #4a3560;
+  --btn-bg-hover: #5b4274;
+  --btn-ink: #ffffff;
+  --btn-border: rgba(179, 166, 214, 0.6);
+  --btn-on-bg: #2f4a37;                 /* "on" state (forest) */
+  --focus: #dfeccf;
+
+  /* tree drawing (read by main.js for the canvas) */
+  --canvas-trunk: #9c8cc4;
+  --canvas-dim: #7f70aa;                /* resting branches */
+  --canvas-lit: #b7cba3;
+  --tile-edge: #dce6cf;
+  --marker: #9c8cc4;
+
+  /* ambient motes */
+  --mote-1: #b7cba3;
+  --mote-2: #b3a6d6;
+  --mote-3: #9bb08c;
+  --grain-opacity: 0.3;
+  --vignette: rgba(8, 4, 14, 0.5);
+
+  /* type */
+  --font-display: "Great Vibes", "Brush Script MT", cursive;
+  --font-ui: "Kedebideri", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* sizing (overridden per breakpoint in style.css) */
+  --tile-size: 66px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.4rem;
+  --space-4: 2.25rem;
+  --radius: 1rem;
+}
+
+/* ---- light theme ------------------------------------------------------ */
+/* (the values are written twice on purpose: once for "system prefers light
+   and nothing was chosen", once for "visitor chose light". CSS has no way to
+   share one block between a media query and an attribute selector.) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg-0: #f4f1f6;
+    --bg-1: #e9e4ef;
+    --bg-glow: rgba(170, 155, 215, 0.28);
+    --bg-glow-2: rgba(150, 180, 140, 0.20);
+    --panel: rgba(255, 255, 255, 0.92);
+    --panel-border: rgba(58, 40, 80, 0.42);
+    --ink: #261b30;
+    --ink-dim: #4d4058;
+    --accent: #3f5e37;
+    --accent-2: #5b4a85;
+    --link: #4a3a78;
+    --btn-bg: #4a3560;
+    --btn-bg-hover: #5b4274;
+    --btn-ink: #ffffff;
+    --btn-border: #33224a;
+    --btn-on-bg: #3f5e37;
+    --focus: #2a1a63;
+    --canvas-trunk: #5b4a85;
+    --canvas-dim: #8d80ae;
+    --canvas-lit: #4f7345;
+    --tile-edge: #3a2b4a;
+    --marker: #5b4a85;
+    --mote-1: #4f7345;
+    --mote-2: #5b4a85;
+    --mote-3: #6f8a65;
+    --grain-opacity: 0.18;
+    --vignette: rgba(91, 74, 133, 0.12);
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-0: #f4f1f6;
+  --bg-1: #e9e4ef;
+  --bg-glow: rgba(170, 155, 215, 0.28);
+  --bg-glow-2: rgba(150, 180, 140, 0.20);
+  --panel: rgba(255, 255, 255, 0.92);
+  --panel-border: rgba(58, 40, 80, 0.42);
+  --ink: #261b30;
+  --ink-dim: #4d4058;
+  --accent: #3f5e37;
+  --accent-2: #5b4a85;
+  --link: #4a3a78;
+  --btn-bg: #4a3560;
+  --btn-bg-hover: #5b4274;
+  --btn-ink: #ffffff;
+  --btn-border: #33224a;
+  --btn-on-bg: #3f5e37;
+  --focus: #2a1a63;
+  --canvas-trunk: #5b4a85;
+  --canvas-dim: #8d80ae;
+  --canvas-lit: #4f7345;
+  --tile-edge: #3a2b4a;
+  --marker: #5b4a85;
+  --mote-1: #4f7345;
+  --mote-2: #5b4a85;
+  --mote-3: #6f8a65;
+  --grain-opacity: 0.18;
+  --vignette: rgba(91, 74, 133, 0.12);
+}
+
+/* ---- "increase contrast" system setting ------------------------------- */
+@media (prefers-contrast: more) {
+  :root {
+    --ink-dim: var(--ink);
+    --panel-border: var(--ink);
+    --btn-border: var(--ink);
+  }
+}

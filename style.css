@@ -1,138 +1,300 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+/* ==========================================================================
+   style.css — Dynamic Soundtracker (final instrument)
+   Colour / theme tokens live in tokens.css. This file is layout, type,
+   components, motion, and the four responsive breakpoints from the brief:
+     Medium        < 840px
+     Expanded      840px – 1199px
+     Large         1200px – 1600px
+     Extra-large   > 1600px
+   ========================================================================== */
 
-:root {
-    --colour-01: #f0f6f0;
-    --colour-02: #0d0d10;
-    --colour-03: #1a1a20;
-    --accent-violet: #58355E;
-    --accent-blue: #3a5ba0;
-    --accent-green: #C4D6B6;
-    --accent-gold: #f2b25c;
-    --tile-size: clamp(40px, 6vw, 90px);
-}
+/* ---- base ------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 112.5%; }            /* 18px base: larger than the browser default for readability */
 
 body {
-font-family: "Work Sans", sans-serif;
-background-color: var(--colour-02);
-color: var(--colour-01);
-position: relative;
-min-height: 100vh;
-overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  font-family: var(--font-ui);
+  font-weight: 400;                    /* regular, not light: light weights lose legibility on dark */
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 50% -10%, var(--bg-glow), transparent 58%),
+    radial-gradient(ellipse at 10% 105%, var(--bg-glow-2), transparent 52%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1) 62%, var(--bg-0));
+  background-attachment: fixed;
 }
 
-dialog[open] {
-background-color: var(--colour-02);
-color: var(--colour-01);
-border: 1px solid #333;
-border-radius: 8px;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 1rem;
-padding: 2rem;
-max-width: min(90vw, 28rem);
+a { color: var(--link); text-underline-offset: 0.2em; text-decoration-thickness: 2px; }
+a:hover { text-decoration-thickness: 3px; }
+
+h1, h2, h3 { margin: 0; }
+p { margin: 0; }
+
+/* visible keyboard focus everywhere (never removed) */
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-dialog::backdrop {
-background: rgba(0,0,0,0.6);
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem; z-index: 50;
+  padding: 0.75rem 1.25rem; border-radius: 999px;
+  background: var(--btn-bg); color: var(--btn-ink); font-weight: 500;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---- atmosphere (decorative): grain and vignette ---------- */
+.atmosphere { position: fixed; inset: 0; pointer-events: none; }
+.atmosphere {
+  z-index: 0;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+.atmosphere::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 42%, transparent 48%, var(--vignette) 100%);
+}
+.site-header, .stage { position: relative; z-index: 2; }
+
+/* ---- header ----------------------------------------------------------- */
+.site-header {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: calc(var(--space-4) + 0.6rem) clamp(1.25rem, 4vw, 3rem) 0;
+}
+.site-header h1 {
+  font-family: var(--font-display);
+  font-weight: 400; letter-spacing: 0;
+  font-size: clamp(2.8rem, 4.6vw, 3.8rem);
+  line-height: 1;
+  color: var(--accent);
+}
+.tagline { margin-top: 0.4rem; max-width: 62ch; font-size: 1rem; color: var(--ink-dim); }
+.header-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+/* ---- buttons ---------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 2.5rem; min-width: 2.5rem;       /* 45px at the 18px base: still a comfortable touch target */
+  padding: 0.4rem 1.05rem;
+  font: 500 0.95rem/1.2 var(--font-ui);
+  color: var(--btn-ink); background: var(--btn-bg);
+  border: 2px solid var(--btn-border); border-radius: 999px;
+  cursor: pointer; text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.btn:hover { background: var(--btn-bg-hover); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: 0.6; cursor: not-allowed; }
+.btn-quiet { background: transparent; color: var(--ink); border-color: var(--panel-border); }
+.btn-quiet:hover { background: var(--panel); }
+.btn-on { background: var(--btn-on-bg); }
+.btn-on:hover { background: var(--btn-on-bg); filter: brightness(1.12); }
+
+/* ---- stage (the tree) ------------------------------------------------- */
+.stage { flex: 1 1 auto; width: 100%; min-height: 34rem; }
+.stage:focus { outline: none; }
+.tree-zone { position: absolute; inset: 0; }
+#branch-canvas, .tile-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+#branch-canvas { pointer-events: none; }
+.tile-layer { pointer-events: none; }
+
+/* ---- floating controls: timer card + demo switch bottom-left, sound bottom-right.
+        The tree layout steers around them (see computeLayout in main.js). */
+.hud { position: absolute; z-index: 3; }
+.corner-left {
+  bottom: var(--space-3); left: clamp(1.25rem, 4vw, 3rem);
+  width: min(17rem, 46%);
+  display: grid; gap: 0.8rem; justify-items: start;
+}
+.timer-card {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem 1rem;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.sound-block { bottom: var(--space-3); right: clamp(1.25rem, 4vw, 3rem); width: min(17rem, 44%); display: grid; gap: 0.7rem; justify-items: start; }
+.btn-small { min-height: 2.5rem; padding: 0.35rem 0.95rem; font-size: 0.9rem; }
+.demo-block {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  min-height: 2.5rem; padding: 0.3rem 1rem;
+  font-size: 0.95rem; font-weight: 500; line-height: 1.2; cursor: pointer;
+  color: var(--ink); border: 1px solid var(--panel-border); border-radius: 999px;
+}
+.demo-block:hover { background: var(--panel); }
+.demo-block input { flex: none; width: 1.2rem; height: 1.2rem; margin: 0; accent-color: var(--accent-2); cursor: pointer; }
+.demo-block small { font-size: 0.85em; color: var(--ink-dim); font-weight: 400; }
+.demo-block:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.tile-slot {
+  position: absolute;
+  width: var(--tile-size); height: var(--tile-size);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+/* idle sway moves only the leaf artwork (using the separate `rotate` property,
+   so it stacks on top of --rot) and never the button, which keeps the click
+   target perfectly still */
+.tile-slot.bloomed .leaf { animation: sway var(--sway-dur, 7s) ease-in-out var(--sway-delay, 0s) infinite; }
+@keyframes sway {
+  0%, 100% { rotate: -3deg; }
+  50%      { rotate: 3deg; }
 }
 
-button {
-border: 1px solid var(--colour-01);
-background: transparent;
-color: var(--colour-01);
-padding: 0.5rem 1rem;
-border-radius: 4px;
-cursor: pointer;
+/* "waiting" marker: shows where a leaf will grow so the tree is never empty */
+.marker {
+  display: none;                 /* waiting dots removed for a calmer, emptier tree */
+  position: absolute; left: 50%; top: 50%;
+  width: 1rem; height: 1rem; margin: -0.5rem 0 0 -0.5rem;
+  border-radius: 50%; background: var(--marker); opacity: 0.6;
+  animation: marker-pulse 2.8s ease-in-out infinite;
 }
-button:hover, button:focus-visible {
-background: var(--colour-01);
-color: var(--colour-02);
-}
-
-header {
-text-align: center;
-padding-block: 2rem 1rem;
-}
-header h1, header p { max-width: none; }
-.subtitle {
-color: #aaa;
-font-size: 0.95rem;
+.tile-slot.bloomed .marker { display: none; }
+@keyframes marker-pulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.4; }
+  50%      { transform: scale(1.25); opacity: 0.8; }
 }
 
-#branch-canvas {
-position: absolute;
-top: 0;
-left: 0;
-z-index: 0;
-pointer-events: none;
-}
-
+/* the leaf itself is a real button: click / Enter / Space toggles its sound */
 .growth-tile {
-position: absolute;
-transform: translate(-50%, -50%);
-border: none;
-cursor: pointer;
-z-index: 1;
-transition: opacity 0.4s ease, filter 0.4s ease;
-opacity: 0.75;
-animation: grow-in 1.8s ease, pulse 4s ease-in-out infinite;
+  position: absolute; inset: 0; padding: 0; margin: 0;
+  background: transparent; border: 0; border-radius: 14px;
+  cursor: pointer; pointer-events: auto;
+  opacity: 0; transform: scale(0.4);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3), filter 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.growth-tile:hover, .growth-tile:focus-visible {
-opacity: 1;
-filter: brightness(1.3);
-outline: 2px solid var(--colour-01);
-outline-offset: 2px;
+.growth-tile[hidden] { display: none; }
+.growth-tile.in { opacity: 1; transform: scale(1); }
+.growth-tile.in:hover { transform: scale(1.1); }
+.growth-tile:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+
+/* leaf = three stacked copies of the same random polygon:
+   halo (pulses while playing) / edge (thin outline) / shard (the colour).
+   clip-path is set per leaf from JS (--clip) and the whole leaf is rotated
+   (--rot) so its narrow end points back at the branch it grew from.
+   The filter sits on the parent button because filter runs BEFORE clip-path
+   on the same element, which would clip the glow away. */
+.leaf { position: absolute; inset: 0; transform: rotate(var(--rot, 0rad)); }
+.leaf > span { position: absolute; clip-path: var(--clip); }
+.leaf .halo  { inset: -3px; background: var(--glow); opacity: 0; }
+.leaf .edge  { display: none; }   /* no outline: the colour fill and the glow do the work */
+.leaf .shard { inset: 0; background: var(--fill); }
+
+/* PLAYING state: the tile lights up (glow + brighter fill) and, unless motion
+   is reduced, a soft halo pulses outward. aria-pressed tells screen readers */
+.growth-tile[aria-pressed="true"] { filter: drop-shadow(0 0 22px var(--glow)) drop-shadow(0 0 8px var(--glow)) brightness(1.1); }
+.growth-tile[aria-pressed="true"] .halo { animation: halo 2.8s ease-out infinite; }
+@keyframes halo {
+  0%   { transform: scale(1);    opacity: 0.45; }
+  100% { transform: scale(1.7);  opacity: 0; }
 }
 
-@keyframes grow-in { from { opacity: 0; } to { opacity: 0.75; } }
-@keyframes pulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+/* ---- timer typography --------------------------------------------------- */
+.phase { font: 400 clamp(1.5rem, 2vw, 1.8rem)/1 var(--font-display); color: var(--accent-2); }
+.time {
+  margin: 0.2rem 0 0.6rem;
+  font-family: var(--font-ui); font-weight: 400;
+  font-size: clamp(2.1rem, 2.8vw, 2.5rem); line-height: 1;
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+  color: var(--accent);
+}
+.bar {
+  height: 0.6rem; border-radius: 999px; overflow: hidden;
+  background: rgba(179, 166, 214, 0.2); border: 1px solid var(--panel-border);
+}
+.bar > span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.4s linear; }
+.status { margin: 0.5rem 0 0.7rem; min-height: 2.8em; font-size: 0.82rem; line-height: 1.4; color: var(--ink-dim); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.timer-card .btn { min-height: 2.3rem; padding: 0.25rem 0.8rem; font-size: 0.85rem; }
 
-/* accessibility: respects a user's OS-level reduced motion setting */
+/* ---- sound (bottom-right) ----------------------------------------------- */
+.playing-count { font-size: 0.95rem; color: var(--ink-dim); }
+.field-label { font-weight: 500; font-size: 0.95rem; }
+.range-row { display: flex; align-items: center; gap: 0.7rem; width: 100%; }
+.range-row input[type="range"] { flex: 1 1 auto; height: 1.8rem; accent-color: var(--accent-2); cursor: pointer; }
+.range-row output { min-width: 3.4ch; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+
+/* ---- dialog (help / how it works) ------------------------------------- */
+dialog {
+  width: calc(100% - 2rem); max-width: 44rem; max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem);
+  padding: 0; overflow: auto;
+  color: var(--ink); background: var(--bg-1);
+  border: 3px solid var(--panel-border); border-radius: 1.25rem;
+}
+dialog::backdrop { background: rgba(10, 4, 20, 0.8); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.dialog-inner { position: relative; padding: clamp(1.5rem, 4vw, 2.75rem); }
+.dialog-inner h2 { font: 400 clamp(2.2rem, 4.4vw, 3rem)/1.05 var(--font-display); color: var(--accent); margin: 0 3rem 1rem 0; }
+.dialog-inner h3 { font: 600 1.05rem/1.3 var(--font-ui); margin: 1.5rem 0 0.4rem; color: var(--accent-2); }
+.dialog-inner p, .dialog-inner li { font-size: 1.05rem; line-height: 1.7; }
+.dialog-inner ol { margin: 0.5rem 0 0; padding-left: 1.5rem; }
+.dialog-inner li { margin: 0.6rem 0; }
+.dialog-close { position: absolute; top: 1rem; right: 1rem; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+
+/* ---- motion preferences ----------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-.growth-tile {
-animation: grow-in 0.3s ease;
-}
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-.controls {
-position: fixed;
-bottom: 1.5rem;
-left: 50%;
-transform: translateX(-50%);
-z-index: 2;
+/* ---- Windows High Contrast / forced colours --------------------------- */
+@media (forced-colors: active) {
+  .btn, .demo-block, .timer-card, dialog { border: 2px solid ButtonText; }
+  .leaf .edge { display: block; background: CanvasText; }
+  .leaf .shard { background: Highlight; }
+  .marker { background: CanvasText; }
 }
 
-footer {
-position: relative;
-z-index: 2;
-text-align: center;
-padding-block: 2rem;
-}
-footer a { color: var(--accent-green); }
+/* ==========================================================================
+   RESPONSIVE / ADAPTIVE DESIGN SYSTEM — the four breakpoints in the brief
+   Each step changes: tile size, type scale, and how the console is arranged.
+   ========================================================================== */
 
-/* ===== Responsive breakpoints (per brief) ===== */
-
-/* Medium: < 840px — phone/tablet portrait */
-@media (width < 840px) {
-header { padding-block: 1.25rem 0.75rem; }
-header h1 { font-size: 1.5rem; }
-:root { --tile-size: clamp(32px, 10vw, 60px); }
-.controls { bottom: 1rem; }
-}
-
-/* Expanded: 840–1199px — tablet landscape, small desktop */
-@media (840px <= width < 1200px) {
-:root { --tile-size: clamp(40px, 7vw, 75px); }
+/* Medium: width < 840px — single column: header, timer card, tree, sound controls.
+   Smallest tiles. */
+@media (max-width: 839.98px) {
+  :root { --tile-size: 58px; }
+  .site-header { flex-direction: column; align-items: flex-start; padding-top: var(--space-2); }
+  .stage { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-2) clamp(1.25rem, 4vw, 2rem) var(--space-3); min-height: 0; }
+  .hud { position: static; width: auto; }
+  .corner-left { width: 100%; }
+  .tree-zone { position: relative; inset: auto; flex: 1 1 auto; min-height: 30rem; margin: 0 calc(-1 * clamp(1.25rem, 4vw, 2rem)); }
+  .sound-block { width: 100%; }
 }
 
-/* Large: 1200–1599px — desktop (base/default sizing) */
-@media (1200px <= width < 1600px) {
-:root { --tile-size: clamp(45px, 6vw, 85px); }
+/* Expanded: 840px – 1199px — timer card bottom-left, medium tiles */
+@media (min-width: 840px) and (max-width: 1199.98px) {
+  :root { --tile-size: 68px; }
+  .stage { min-height: 40rem; }
+  .corner-left { width: min(17rem, 48%); }
 }
 
-/* Extra-large: > 1600px — ultrawide/large monitors */
-@media (width > 1600px) {
-header h1 { font-size: 3rem; }
-:root { --tile-size: clamp(55px, 5vw, 110px); }
+/* Large: 1200px – 1600px — larger type (19px) and tiles */
+@media (min-width: 1200px) and (max-width: 1600px) {
+  :root { --tile-size: 74px; }
+  html { font-size: 118.75%; }          /* 19px */
+  .stage { min-height: 38rem; }
+}
+
+/* Extra-large: width > 1600px — biggest type (20px), tiles and spacing */
+@media (min-width: 1600.02px) {
+  :root { --tile-size: 88px; --space-3: 1.75rem; --space-4: 2.75rem; }
+  html { font-size: 125%; }             /* 20px */
+  .stage { min-height: 40rem; }
+  .corner-left { width: min(19rem, 36%); }
 }

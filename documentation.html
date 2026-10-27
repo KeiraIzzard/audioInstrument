@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canopy: Documentation</title>
+  <meta name="description" content="How Canopy works: its interactive features, the Math.random() technique, and the design system behind it.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23240f40'/%3E%3Cpath d='M12 40 C 18 18, 40 12, 54 14 C 54 34, 40 52, 12 40 Z' fill='%23c9dbbb'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="docs.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the documentation</a>
+  <header class="doc-header">
+    <a class="brand" href="index.html">Canopy</a>
+    <nav aria-label="Site">
+      <a class="btn" href="index.html">Open the instrument</a>
+      <button class="btn btn-quiet" id="theme-toggle" type="button">Switch to light mode</button>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <h1>Documentation</h1>
+    <p class="lead">Canopy (the Canopy project) is a browser-based instrument for studying. A Pomodoro timer grows a tree while you focus, and every leaf on the tree is a sound you can switch on and layer into a soundscape.</p>
+
+    <nav class="toc" aria-labelledby="toc-title">
+      <strong id="toc-title">On this page</strong>
+      <ol>
+        <li><a href="#overview">What it is and who it is for</a></li>
+        <li><a href="#core">Core interactive features</a></li>
+        <li><a href="#technique">Extended technique: Math.random()</a></li>
+        <li><a href="#design">Design system</a></li>
+        <li><a href="#access">Accessibility</a></li>
+        <li><a href="#testing">Browsers and testing</a></li>
+        <li><a href="#credits">Credits</a></li>
+        <li><a href="#log">Commit log</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview">What it is and who it is for</h2>
+    <p>People often study with ambient sound but have to pick a playlist and then leave it alone. This instrument makes the sound part of the study session. Each focus period earns you new leaves, so the soundscape you can build gets richer the longer you work. It is designed for students who want a calm, low-effort way to shape their own background sound, and it can be used with a mouse, touch or keyboard.</p>
+    <p>You do not need any musical knowledge. Every leaf already sounds good with the others, because all the pitched sounds come from one gentle set of notes.</p>
+
+    <h2 id="core">Core interactive features</h2>
+
+    <h3>1. Pomodoro timer that grows the tree</h3>
+    <p>Press <strong>Start focus</strong>. The timer follows the Pomodoro technique: 25 minutes of focus, then a 5-minute break, repeated for four sessions. After the fourth session there is a longer 15-minute break and the tree is complete. <strong>Pause</strong> stops the clock, <strong>Skip break</strong> jumps ahead during a break, and <strong>Reset tree</strong> (which asks you to confirm) starts over with a brand new tree. The timer sits in a small card at the bottom left of the screen so it is always in view.</p>
+    <p>While you focus, leaves bloom at random moments, four per session, so a finished tree has 16 leaves. The <strong>Demo speed</strong> switch (under the timer) makes one minute pass every second so you can see a whole cycle quickly.</p>
+
+    <h3>2. Click a leaf and its sound keeps playing</h3>
+    <p>Each leaf is a button. Click or tap it and its sound starts and keeps looping. Click another leaf and that sound joins in. Keep adding leaves to build a layered soundscape. Click a playing leaf again to stop just that sound, or use <strong>Stop all sounds</strong>. A playing leaf lights up with a soft glow, a brighter fill and a slowly pulsing halo, so you can tell what is on without relying on colour alone.</p>
+    <p>With a keyboard, press <kbd>Tab</kbd> to reach a leaf and <kbd>Enter</kbd> or <kbd>Space</kbd> to toggle it. The <strong>Volume</strong> slider (bottom right) sets overall loudness and <strong>Stop all sounds</strong> clears the mix. As more leaves play, each one is turned down slightly so the mix never gets harsh or distorted.</p>
+
+    <h3>3. Rare leaves</h3>
+    <p>Most leaves carry common sounds. Some carry a rarer, brighter bell sound in a paler colour. They appear less often, which makes each one feel like a find. Screen readers are told when a leaf is rare.</p>
+
+    <h3>4. Light and dark mode</h3>
+    <p>The page follows your device setting by default. The <strong>Switch to light/dark mode</strong> button overrides it, and your choice is remembered on this device.</p>
+
+    <h2 id="technique">Extended technique: Math.random()</h2>
+    <p>The tree is never the same twice, because randomness decides what grows, where, and when. The code uses <code>Math.random()</code> in several deliberate ways rather than as one coin flip.</p>
+
+    <div class="table-wrap">
+    <table>
+      <caption>Where randomness is used</caption>
+      <thead><tr><th scope="col">What</th><th scope="col">How it uses Math.random()</th><th scope="col">Why</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Which sound a new leaf gets</th><td>A weighted pick across five sound tiers. Common tiers have large weights, the rare bell has a small one.</td><td>Most leaves are easy to combine; rare ones feel special.</td></tr>
+        <tr><th scope="row">Which note a leaf plays</th><td>A weighted pick from five notes (C, E, G, D, A) with the most settled notes weighted highest.</td><td>Any combination of leaves sounds harmonious.</td></tr>
+        <tr><th scope="row">When leaves bloom</th><td>The focus period is split into four equal parts and one random moment is chosen inside each part.</td><td>Growth is unpredictable but never bunches up or stalls.</td></tr>
+        <tr><th scope="row">Leaf shape and sway</th><td>Random lobe count, width, wobble and tilt for each outline.</td><td>Every leaf is its own shape, like real foliage.</td></tr>
+        <tr><th scope="row">Branch shape</th><td>Random bough angle and length, plus twig bends and small offshoots, when a tree is created.</td><td>Each new tree has its own silhouette.</td></tr>
+        <tr><th scope="row">Where a sample starts</th><td>Each sound begins at a random point in its audio file.</td><td>Layers drift against each other instead of locking into a loop.</td></tr>
+        <tr><th scope="row">Catch-up for rare leaves</th><td>If 8 or more leaves have bloomed and none is rare, the rare weight is multiplied by 4.</td><td>Players are not left waiting forever for a rare leaf.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>The weighted choice works by adding up all the weights, picking a random number between zero and that total, and walking along the list until the running total passes the number:</p>
+<pre><code>function weightedPick(items) {
+  var total = 0;
+  items.forEach(function (i) { total += i.weight; });
+  var r = Math.random() * total;
+  for (var k = 0; k &lt; items.length; k++) {
+    r -= items[k].weight;
+    if (r &lt; 0) return items[k];
+  }
+  return items[items.length - 1];
+}</code></pre>
+
+    <h2 id="design">Design system</h2>
+    <h3>Colour</h3>
+    <p>The palette is deliberately calm and limited to muted purples and greens taken from the project mood board: deep aubergine and plum for the background, soft lavender for the trunk and secondary text, and sage green for the timer and anything that is growing. Light mode swaps to a soft off-white with the same hues darkened for contrast. All colours are CSS custom properties in <code>tokens.css</code>, so dark and light mode swap one set of values and nothing else changes.</p>
+    <h3>Type</h3>
+    <p>Kedebideri, a clear and friendly sans-serif, is used for all interface text because it stays readable at small sizes. Great Vibes, a flowing script, is used for the name and the timer's phase label, which gives the instrument its calm, hand-written character. Base text is 18px and grows with the screen.</p>
+    <h3>Responsive and adaptive behaviour</h3>
+    <p>The layout adapts at four breakpoints. Spacing and type scale up with the screen, the leaves get larger, and the controls rearrange.</p>
+
+    <div class="table-wrap">
+    <table>
+      <caption>The four breakpoints</caption>
+      <thead><tr><th scope="col">Breakpoint</th><th scope="col">Width</th><th scope="col">Leaf size</th><th scope="col">What changes</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Medium</th><td>under 840px</td><td>58px</td><td>Everything stacks in one column: timer card and demo switch on top, then the tree, then the sound controls.</td></tr>
+        <tr><th scope="row">Expanded</th><td>840 to 1199px</td><td>68px</td><td>Timer card and demo switch at the bottom left, sound controls at the bottom right, tree in the centre.</td></tr>
+        <tr><th scope="row">Large</th><td>1200 to 1600px</td><td>78px</td><td>Same layout with more room for the tree. Type grows to 19px.</td></tr>
+        <tr><th scope="row">Extra-large</th><td>over 1600px</td><td>92px</td><td>Largest type (20px), leaves and spacing.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The tree itself is recalculated from the size of the screen every time the window changes, so its branches always reach towards the edges of the area it has, rather than being scaled from a fixed picture.</p>
+
+    <h2 id="access">Accessibility</h2>
+    <ul>
+      <li><strong>Contrast.</strong> Text meets WCAG AAA (7:1 or more): in dark mode body text is about 15 to 17:1 and secondary text 11.4:1; in light mode 15.8:1 and 9.2:1. Button text is 8.7:1 (dark) and 9.2:1 (light). Lines and outlines are at least 3:1.</li>
+      <li><strong>Size.</strong> Base text is 18px and grows on larger screens, buttons are about 45px tall, and the pop-up uses larger type.</li>
+      <li><strong>Keyboard.</strong> Every control can be reached and used without a mouse, with a strong visible focus ring, and a skip link jumps straight to the tree.</li>
+      <li><strong>Screen readers.</strong> The timer is announced as a timer, phase changes and new leaves are announced politely, and playing leaves report their on/off state.</li>
+      <li><strong>Not colour alone.</strong> A playing leaf brightens, glows and pulses as well as changing colour, and screen readers hear each leaf's on/off state and whether it is rare.</li>
+      <li><strong>Motion.</strong> If your device asks for reduced motion, the sway, pulse and drifting particles are switched off. High-contrast and forced-colour modes are supported.</li>
+    </ul>
+
+    <h2 id="testing">Browsers and testing</h2>
+    <p>The instrument is built with plain HTML, CSS and JavaScript plus the Tone.js audio library, which is included in the project, so it needs no install and works offline once loaded. It was built for the current versions of Chrome and Firefox. Browsers keep audio switched off until you interact with the page, so sound begins the first time you click a leaf.</p>
+
+    <h2 id="credits">Credits</h2>
+    <ul>
+      <li>Audio engine: <a href="https://tonejs.github.io/">Tone.js</a> (MIT licence).</li>
+      <li>Ambient synth samples: <a href="https://www.legowelt.org/samples/">legowelt.org/samples</a>.</li>
+      <li>Fonts: Kedebideri and Great Vibes (SIL Open Font Licence), included in the <code>fonts</code> folder.</li>
+      <li>Code, design and the tree artwork by Keira Izzard for RMIT (COMM2753 / COMM2751). AI assistance is acknowledged in the Canvas submission comment.</li>
+    </ul>
+
+    <h2 id="log">Commit log</h2>
+    <details>
+      <summary>Final commit log</summary>
+      <p>The commit log table will be pasted here before submission.</p>
+    </details>
+  </main>
+
+  <footer>
+    <p><a href="index.html">Back to the instrument</a> · <a href="https://keiraizzard.github.io/specialisationWorkIndex/">Specialisation work index</a></p>
+  </footer>
+</body>
+</html>
